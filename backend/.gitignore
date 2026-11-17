@@ -1,0 +1,59 @@
+.env
+.env.local
+.env.*.local
+
+# 数据目录（包含数据库和向量索引）
+data/
+*.db
+*.db-journal
+
+# 向量数据库
+vector_db/
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# 测试覆盖率
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# pytest
+.pytest_cache/
+.tox/
+.nox/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 虚拟环境
+venv/
+env/
+.venv/
+
+# 日志
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 安全扫描报告
+bandit-report.*
+pip-audit.json
+secrets-report.json
+lint-report.txt

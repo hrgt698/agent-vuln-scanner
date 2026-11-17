@@ -1,0 +1,66 @@
+# ============================================================
+# Agent Vulnerability Assessment Platform - Docker Compose 一键部署
+# ============================================================
+# 使用方式：
+#   1. 设置环境变量：export DASHSCOPE_API_KEY="your_api_key"
+#                     export JWT_SECRET="your_jwt_secret"
+#   2. 启动全部服务：docker compose up -d --build
+#   3. 查看日志：    docker compose logs -f backend
+#   4. 关闭服务：    docker compose down
+# ============================================================
+
+services:
+  # ============== 后端 FastAPI 服务 ==============
+  backend:
+    build: ./backend
+    container_name: assessment-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY:-}
+      - JWT_SECRET=${JWT_SECRET:-}
+      - ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8000/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    networks:
+      - assessment-net
+
+  # ============== 前端 Vue 服务 ==============
+  frontend:
+    build: ./frontend
+    container_name: assessment-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - assessment-net
+
+  # ============== 漏洞靶机（使用独立 Dockerfile.target）==============
+  target:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.target
+    container_name: assessment-target
+    ports:
+      - "18789:18789"
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    networks:
+      - assessment-net
+
+# ============== 网络配置 ==============
+networks:
+  assessment-net:
+    driver: bridge

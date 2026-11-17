@@ -1,0 +1,84 @@
+# 系统配置文件
+# 所有配置项从此文件加载，避免硬编码
+
+app:
+  name: "Agent Vulnerability Assessment Platform"
+  version: "2.4.0"
+  host: "127.0.0.1"
+  port: 8000
+  debug: false
+
+# 靶机配置
+target:
+  url: "http://127.0.0.1:18789"
+  container_name: "assessment-target"
+  timeout: 60
+
+# API Key 配置（可通过环境变量覆盖）
+dashscope:
+  api_key: "${DASHSCOPE_API_KEY}"
+  base_url: "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation"
+
+# 可用模型列表
+models:
+  default: "qwen-turbo"
+  available:
+    - id: "qwen-turbo"
+      name: "通义千问-Turbo（轻量快速）"
+    - id: "qwen-plus"
+      name: "通义千问-Plus（均衡性能）"
+    - id: "qwen-max"
+      name: "通义千问-Max（最强能力）"
+    - id: "qwen-max-longcontext"
+      name: "通义千问-Max-长文本"
+
+# RAG 向量数据库配置 + Embedding 模型
+rag:
+  provider: "faiss"  # 支持: faiss, chroma
+  embedding_model: "dashscope-text-embedding-v3"  # 使用通义千问 embedding
+  embedding_dim: 1024  # 通义千问 text-embedding-v3 向量维度
+  top_k: 3
+  persist_dir: "./data/vector_db"
+
+# 数据库配置（SQLite）
+database:
+  path: "./data/assessment.db"
+  echo: false
+
+# 安全配置
+security:
+  cors_origins:
+    - "http://localhost:5173"
+    - "http://127.0.0.1:5173"
+  rate_limit:
+    enabled: true
+    requests_per_minute: 60
+  # JWT 动态 Token 认证配置（v2.3 新增，替代静态 API Key）
+  jwt:
+    secret_env_var: "JWT_SECRET"   # 从此环境变量读取 JWT 密钥
+    algorithm: "HS256"              # JWT 签名算法
+    default_expire_hours: 8        # 默认 Token 有效期（小时）
+  # WAF 蓝队规则引擎配置
+  waf_threshold_initial: 0.4   # 初始拦截阈值
+  waf_threshold_min: 0.1       # 最低拦截阈值（回合越深越严格）
+  waf_threshold_decay: 0.05    # 每回合阈值下降幅度
+
+# 漏洞脚本白名单
+exploits:
+  allowed_scripts:
+    - "exp_cs0048.py"
+    - "exp_cwe78.py"
+    - "exp_sql_injection.py"
+    - "exp_prompt_injection.py"
+
+# CI/CD 配置
+cicd:
+  test_coverage_min: 60
+  bandit_threshold: "medium"
+  safety_check: true
+
+# 红蓝对抗配置
+adversarial:
+  max_rounds: 5
+  attempts_per_round: 5
+  use_real_waf: true  # v2.3：启用真实 WAF 规则引擎（替换原来的随机概率）

@@ -1,0 +1,10 @@
+module: src.client.agents.HTTPAgent
+parameters:
+  name: <% NAME %>
+  url: http://127.0.0.1:18789/api/v1/config
+  headers:
+    Content-Type: application/json
+  body: {}
+  prompter:
+    name: prompt_string
+  return_format: "{response}"

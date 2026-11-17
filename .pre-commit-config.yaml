@@ -1,0 +1,46 @@
+# ============================================================
+# 本项目 pre-commit hooks 配置
+# 安装方式：pip install pre-commit && pre-commit install
+# 首次运行：pre-commit run --all-files
+# ============================================================
+repos:
+  # ===== 通用检查 =====
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: ['--allow-multiple-documents']
+      - id: check-added-large-files
+        args: ['--maxkb=20480']
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+      - id: no-commit-to-branch
+        args: ['--branch', 'main']
+
+  # ===== Python Lint + Format =====
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.0
+    hooks:
+      - id: ruff
+        args: ['--fix', '--output-format=github']
+      - id: ruff-format
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
+        name: mypy (types)
+        additional_dependencies: [httpx]
+        args: ['--ignore-missing-imports', '--follow-imports=silent']
+
+  # ===== Python 安全扫描 =====
+  - repo: https://github.com/pycqa/bandit
+    rev: 1.7.8
+    hooks:
+      - id: bandit
+        name: bandit (security scan)
+        args: ['--recursive', 'backend/', '--severity-level', 'high', '--confidence-level', 'medium', '-s', 'B303,B324']

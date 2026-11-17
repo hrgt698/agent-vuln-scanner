@@ -1,0 +1,14 @@
+services:
+  assessment-target:
+    image: python:3.10-slim
+    container_name: assessment-target
+    build: .
+    ports:
+      - "127.0.0.1:18789:18789"   # 仅绑定本地回环地址，防止外部网络访问
+    env_file:
+      - .env                        # 所有敏感配置统一从 .env 注入
+    environment:
+      - ADMIN_SECRET_KEY=${ADMIN_SECRET_KEY}   # 从 .env 动态注入，不再硬编码
+      - SKILL_SANDBOX_MODE=none
+    user: "1000:1000"               # 使用非 root 用户运行
+    restart: "on-failure"           # 仅异常退出时重启，避免无限重启循环

@@ -1,0 +1,32 @@
+gpt-3.5-turbo-0613:
+    import: "./openai-chat.yaml"
+    parameters:
+        name: "local-vuln-target"
+        endpoint: "http://127.0.0.1:18789"
+        api_key: ""
+        path: "/api/v1/config"
+        body:
+            model: "local-target"
+            max_tokens: 512
+
+text-davinci-003:
+    import: "./openai-text.yaml"
+    parameters:
+        name: "local-vuln-target"
+        endpoint: "http://127.0.0.1:18789"
+        api_key: ""
+        path: "/api/v1/config"
+        body:
+            model: "local-target"
+            max_tokens: 512
+
+text-davinci-002:
+    import: "./openai-text.yaml"
+    parameters:
+        name: "local-vuln-target"
+        endpoint: "http://127.0.0.1:18789"
+        api_key: ""
+        path: "/api/v1/config"
+        body:
+            model: "local-target"
+            max_tokens: 512

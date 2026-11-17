@@ -1,0 +1,17 @@
+{"index": 0, "error": "status_failed", "details": "{\"detail\":\"No such session\"}"}
+{"index": 1, "error": "status_failed", "details": "{\"detail\":\"No such session\"}"}
+{"index": 2, "error": "status_failed", "details": "{\"detail\":\"No such session\"}"}
+{"index": 3, "error": "status_failed", "details": "{\"detail\":\"No such session\"}"}
+{"index": 4, "error": "status_failed", "details": "{\"detail\":\"No such session\"}"}
+{"index": 5, "error": "status_failed", "details": "{\"detail\":\"No such session\"}"}
+{"index": 6, "error": "status_failed", "details": "{\"detail\":\"No such session\"}"}
+{"index": 7, "error": "status_failed", "details": "{\"detail\":\"No such session\"}"}
+{"index": 8, "error": "status_failed", "details": "{\"detail\":\"No such session\"}"}
+{"index": 9, "error": "status_failed", "details": "{\"detail\":\"No such session\"}"}
+{"index": 10, "error": "status_failed", "details": "{\"detail\":\"No such session\"}"}
+{"index": 11, "error": "status_failed", "details": "{\"detail\":\"No such session\"}"}
+{"index": 0, "error": "initial_interact_failed", "details": "{\"message\":\"invalid session id\"}\n"}
+{"index": 1, "error": "initial_interact_failed", "details": "{\"message\":\"invalid session id\"}\n"}
+{"index": 2, "error": "initial_interact_failed", "details": "{\"message\":\"invalid session id\"}\n"}
+{"index": 3, "error": "initial_interact_failed", "details": "{\"message\":\"invalid session id\"}\n"}
+{"index": 4, "error": "initial_interact_failed", "details": "{\"message\":\"invalid session id\"}\n"}

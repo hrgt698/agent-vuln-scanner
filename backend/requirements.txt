@@ -1,0 +1,48 @@
+# ============================================================
+# Agent Vulnerability Assessment Platform - Python 依赖清单 v2.2
+# 安装方式：
+#   生产环境：pip install -r requirements.txt
+#   开发环境：pip install -r requirements.txt
+# ============================================================
+
+# ===== 核心框架 =====
+fastapi>=0.100.0,<0.116.0        # 高性能 Web 框架
+uvicorn>=0.22.0                   # ASGI 服务器
+pydantic>=2.0.0                   # 数据验证
+python-dotenv>=1.0.0              # .env 环境变量加载
+
+# ===== AI / LLM 依赖 =====
+httpx>=0.27.0                      # 异步 HTTP 客户端（核心依赖，所有 API 调用统一使用 httpx）
+requests>=2.28.0                    # 同步 HTTP 客户端（漏洞脚本 exp_*.py 使用）
+
+# ===== 认证与安全 =====
+python-jose[cryptography]>=3.3.0  # JWT Token 生成与验证（v2.3 新增）
+
+# ===== RAG 向量检索 =====
+faiss-cpu>=1.7.4                  # Facebook 向量检索库（Meta AI）
+numpy>=1.24.0                     # 向量运算基础
+
+# ===== 配置管理 =====
+PyYAML>=6.0                       # YAML 配置文件解析
+
+# ===== 漏洞检测与 Payload Fuzzer =====
+# （目前使用内部实现，无额外依赖）
+
+# ===== 数据库 =====
+sqlalchemy>=2.0.0                  # SQLAlchemy ORM（v2.4，支持 PostgreSQL 扩展）
+# SQLite 为 Python 标准库自带，无需额外安装
+# 如需升级到 PostgreSQL，可添加：psycopg2-binary>=2.9
+
+# ============================================================
+# 开发/测试依赖（v2.4 已激活测试依赖）
+# ============================================================
+pytest>=7.0.0                      # 测试框架
+pytest-asyncio>=0.21.0             # 异步测试支持
+pytest-cov>=4.0.0                  # 测试覆盖率
+httpx>=0.27.0                      # 异步 HTTP 客户端（用于测试）
+bandit>=1.7.0                      # 安全静态扫描
+safety>=3.0.0                      # 依赖漏洞扫描
+pip-audit>=2.6.0                   # PyPI 漏洞审计
+ruff>=0.4.0                        # 快速 lint + isort
+black>=24.0.0                      # 代码格式化
+mypy>=1.8.0                        # 静态类型检查

@@ -1,0 +1,72 @@
+# ============================================================
+# Vulnerable target container image (v3.0)
+# 包含 4 类故意保留的教学漏洞（仅用于教学/评估用途）
+# 构建方式：docker build -f Dockerfile.target -t assessment-target .
+#
+# 【重要】v3.0 环境变量说明：
+# 所有敏感信息默认值为 "__REQUIRED__" 占位符，避免意外暴露。
+# 生产/评估部署时必须通过 -e 参数或 docker-compose.yml 显式注入：
+#   -e FLAG_CS0048="..." -e TARGET_DB_PASSWORD="..." -e TARGET_MODE="teaching"
+#
+# 【警告】TARGET_MODE=production 时，若检测到 __REQUIRED__ 占位符，
+#         容器将拒绝启动并退出（安全防护机制）。
+# ============================================================
+FROM python:3.10-slim
+
+LABEL maintainer="hrgt698"
+LABEL description="漏洞靶机容器（含 CS0048/CWE-89/CWE-78/AML.T0051 教学漏洞）"
+LABEL usage="仅供教学演示，禁止在生产环境暴露此容器"
+
+WORKDIR /app
+
+# 安装轻量依赖（版本锁定，防止依赖漂移）
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl && \
+    rm -rf /var/lib/apt/lists/* && \
+    pip install --no-cache-dir \
+        fastapi==0.110.0 \
+        uvicorn==0.27.0 \
+        PyYAML==6.0.1
+
+# 复制靶机应用
+COPY target_app.py /app/target_app.py
+
+# 创建漏洞演示文件
+RUN mkdir -p /app/vulns && \
+    echo "# 漏洞演示文件 - 请勿在生产环境部署" > /app/vulns/README.txt
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=5s --start-period=3s --retries=3 \
+    CMD curl -f http://127.0.0.1:18789/api/v1/config || exit 1
+
+# 以非 root 用户运行（安全加固）
+RUN useradd --create-home --shell /bin/bash appuser && \
+    chown -R appuser:appuser /app
+USER appuser
+
+# ============================================================
+# v3.0 默认值：全部使用 __REQUIRED__ 占位符，强制显式配置
+# TARGET_MODE=production 时，若仍存在占位符则拒绝启动
+# ============================================================
+ENV TARGET_MODE=teaching \
+    FLAG_CS0048=__REQUIRED__ \
+    FLAG_CWE78=__REQUIRED__ \
+    FLAG_CWE89=__REQUIRED__ \
+    FLAG_AML=__REQUIRED__ \
+    TARGET_DB_PASSWORD=__REQUIRED__ \
+    TARGET_API_KEY=__REQUIRED__ \
+    TARGET_JWT_SECRET=__REQUIRED__ \
+    TARGET_AWS_ACCESS_KEY=__REQUIRED__ \
+    TARGET_AWS_SECRET_KEY=__REQUIRED__ \
+    TARGET_ADMIN_EMAIL=__REQUIRED__ \
+    TARGET_ADMIN_SECRET=__REQUIRED__ \
+    TARGET_JWT_SECRET_LEAK=__REQUIRED__ \
+    TARGET_INTERNAL_TOKEN=__REQUIRED__ \
+    TARGET_ADMIN_USER=__REQUIRED__ \
+    TARGET_ADMIN_PASS=__REQUIRED__ \
+    TARGET_ADMIN_TOKEN=__REQUIRED__
+
+EXPOSE 18789
+
+# 启动靶机应用
+CMD ["python", "/app/target_app.py"]
