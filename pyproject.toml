@@ -5,7 +5,7 @@
 [project]
 name = "assessment-vuln-platform"
 version = "2.4.0"
-description = "基于 AgentBench + OpenClaw 的 AI Agent 高危漏洞自动化评估平台"
+description = "AI Agent 高危漏洞自动化评估平台"
 requires-python = ">=3.9"
 authors = [
     { name = "hrgt698", email = "1810848755@qq.com" },

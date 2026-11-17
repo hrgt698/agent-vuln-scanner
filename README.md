@@ -1,6 +1,6 @@
 # Agent Vulnerability Assessment Platform
 
-> 基于 **AgentBench** 评估基准与 **OpenClaw** 靶场改造的自主决策型智能体高危脆弱性自动化评估平台
+> 基于 **AgentBench** 评估基准与教学靶场改造的自主决策型智能体高危脆弱性自动化评估平台
 >
 > 覆盖 **漏洞扫描 → AI 研判 → 决策追踪 → 自动修复 → 红蓝对抗** 全链路，后端 FastAPI + 前端 Vue 3 + Docker 靶机沙箱。
 
@@ -57,7 +57,7 @@
 
 **基础设施**：Docker · Docker Compose · Nginx（前端生产镜像）
 
-**质量与安全工具链**：pytest / pytest-asyncio / pytest-cov · ruff · black · mypy · bandit · safety · pip-audit · pre-commit
+**本地开发工具链**：pytest / pytest-asyncio / pytest-cov · ruff · black · mypy · bandit · safety · pip-audit · pre-commit
 
 ---
 
@@ -214,7 +214,7 @@ python scripts/stat.py
 python scripts/scorecard.py
 ```
 
-CI 流水线（`.github/workflows/ci-cd.yml`）依次执行：lint（ruff / black / mypy）→ pytest 单测 → 安全扫描（bandit / safety / pip-audit）→ 前端检查 → 镜像构建；OWASP ZAP DAST 为占位步骤，需要运行中的靶机实例。
+CI 流水线（`.github/workflows/ci-cd.yml`）包含两个任务：后端运行 pytest 单元测试与纯标准库端到端测试；前端执行依赖安装与生产构建。本地开发可使用 ruff / black / mypy / bandit / safety / pip-audit 等工具做格式、类型与依赖安全检查。
 
 ---
 
@@ -264,7 +264,7 @@ CI 流水线（`.github/workflows/ci-cd.yml`）依次执行：lint（ruff / blac
 ## 致谢
 
 - [AgentBench](https://github.com/THUDM/AgentBench) — 智能体能力评估基准框架；
-- OpenClaw — 健壮性测试与靶场参考框架；
+- 上游健壮性测试与教学靶场参考框架（原始 LICENSE 与文档保留在 `agentbench_core/` 目录）；
 - 通义千问 DashScope API — 大模型研判能力支持。
 
 上游框架的原始 LICENSE 与文档保留在 `agentbench_core/` 对应目录内。

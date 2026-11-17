@@ -4,7 +4,7 @@
 
 ## 📖 项目概览
 
-本项目是一个基于 **AgentBench + OpenClaw** 的漏洞自动化评估平台，核心特性包括：
+本项目是一个基于 **AgentBench** 评估基准与教学靶场的漏洞自动化评估平台，核心特性包括：
 
 - **ReAct Agent** - Toolformer 风格显式工具循环（Thought → Action → Observation）
 - **Q-Learning 红蓝对抗** - 攻击策略自适应，支持 SQLite 持久化
@@ -399,7 +399,7 @@ A: 设置环境变量 `DB_ENGINE=postgres` 并提供 `DB_POSTGRES_HOST/PORT/USER
 ## 📚 参考资源
 
 - **AgentBench Paper**: 评估大型语言模型作为代理的能力
-- **OpenClaw**: 教学级漏洞靶场
+- 上游教学级漏洞靶场（见 `agentbench_core/` 目录）
 - **FastAPI 文档**: https://fastapi.tiangolo.com/
 - **SQLAlchemy ORM**: https://docs.sqlalchemy.org/
 - **DashScope API**: https://help.aliyun.com/zh/model-studio/
