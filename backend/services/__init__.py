@@ -77,6 +77,7 @@ from services.react_service import (
 from services.multimodel import (
     COMPARE_MODEL_LIST,
     MODEL_RELIABILITY_WEIGHTS,
+    _call_single_model,
     judge_multimodel_compare,
     sse_stream_multimodel,
     judge_weighted_ensemble_compare,

@@ -16,27 +16,18 @@ from database import Database, ScanRecord, PatchRecord, AdversarialRecord
 
 @pytest.fixture
 def temp_db():
-    """创建临时数据库"""
-    with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as f:
-        db_path = f.name
-
-    db = Database.get_instance(db_path=db_path)
-    # 清空数据（通过重新初始化）
-    db._get_conn = lambda: _get_temp_conn(db_path)
+    """创建隔离的临时数据库（每个用例独立实例，避免单例跨用例累积）"""
+    Database.reset_instance()
+    fd, db_path = tempfile.mkstemp(suffix=".db")
+    os.close(fd)
+    db = Database.get_instance(db_path=db_path, use_orm=True)
     yield db
-
-    # 清理
+    Database.reset_instance()
     try:
         os.unlink(db_path)
     except OSError:
         pass
 
-
-def _get_temp_conn(db_path):
-    import sqlite3
-    conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
-    return conn
 
 
 def test_save_scan_record(temp_db):

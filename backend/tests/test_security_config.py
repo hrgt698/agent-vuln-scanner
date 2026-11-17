@@ -12,7 +12,7 @@ from unittest.mock import MagicMock, patch, AsyncMock
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 from security import RateLimiter, sanitize_path, hash_sensitive_data
-from config_loader import Config
+from config_loader import Config, get_config
 
 
 # ======================================================

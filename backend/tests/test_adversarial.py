@@ -48,23 +48,36 @@ class TestAdversarialEvaluator:
         assert plan_early["strategy"] and plan_late["strategy"]
 
     def test_blue_team_detect_no_history(self):
-        """无历史记录时检测概率应较低"""
-        plan = self.evaluator._red_team_plan(1, 1)
-        # 多次测试看平均检测率
-        detected_count = 0
-        for _ in range(100):
-            detected, _ = self.evaluator._blue_team_detect(plan, {"success": False})
-            if detected:
-                detected_count += 1
-        # 第 1 回合，detection_rate = 0.3
-        assert 0.1 <= detected_count / 100 <= 0.6
+        """无历史学习记录时，蓝队按 WAF 规则判定：正常描述放行，攻击特征拦截"""
+        benign_plan = {
+            "cve": "CS0048",
+            "strategy": "standard probe",
+            "description": "normal product query",
+            "payload": "",
+        }
+        detected, _, _ = self.evaluator._blue_team_detect(
+            benign_plan, {"success": False, "payload": ""}
+        )
+        assert detected is False
+
+        attack_plan = {
+            "cve": "CWE-89",
+            "strategy": "sqli",
+            "description": "login form",
+            "payload": "1' OR '1'='1 --",
+        }
+        detected, _, _ = self.evaluator._blue_team_detect(
+            attack_plan,
+            {"success": False, "payload": "1' OR '1'='1 --"},
+        )
+        assert detected is True
 
     def test_blue_team_detect_learns(self):
         """蓝队应学习已成功过的攻击策略"""
         plan = self.evaluator._red_team_plan(1, 1)
         # 模拟红队历史上成功过
         self.evaluator.red_strategy_history.append(plan["strategy"])
-        detected, action = self.evaluator._blue_team_detect(plan, {"success": True})
+        detected, _, _ = self.evaluator._blue_team_detect(plan, {"success": True})
         assert detected is True  # 学习到防御规则
 
     def test_scoreboard_after_round(self):

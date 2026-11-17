@@ -450,7 +450,7 @@ class AdversarialEvaluator:
             attack_plan.get("description", ""),
             attack_plan.get("strategy", ""),
         ]
-        combined_text = " | ".join(t for t in texts_to_check if t)
+        combined_text = " ".join(t for t in texts_to_check if t)
 
         # 检查是否已经被蓝队记录的规则拦截过
         for rule_id, hit_count in self._blue_learned_rules.items():
